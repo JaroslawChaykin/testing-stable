@@ -1,8 +1,7 @@
 <template>
   <div class="item">
     <div>
-      {{ title }}
-      {{category}}
+      <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>
     </div>
     <div class="btns-item">
       <Button @click="$emit('deletePost', post.id)">Редактировать</Button>
@@ -13,8 +12,11 @@
 
 <script>
 
+import SearchSlice from "@/components/SearchSlice.vue";
+
 export default {
   name: "PostItem",
+  components: {SearchSlice},
   props: {
     post: {
       id: Number,
@@ -29,6 +31,23 @@ export default {
       category: this.post.category
     }
   },
+  computed: {
+    separatorStart() {
+      return  Math.random().toString(16)
+    },
+    separatorEnd() {
+      return  Math.random().toString(16)
+    },
+    searchSliceText() {
+      return this.title.replaceAll(this.search, (text) => {
+        if(!this.search) {
+          return text
+        }
+
+        return `${this.separatorStart}${text}${this.separatorEnd}`
+      })
+    }
+  }
 }
 </script>
 
@@ -47,9 +66,5 @@ export default {
   border-radius: 4px;
   padding: 10px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
-}
-
-span {
-  background: red;
 }
 </style>

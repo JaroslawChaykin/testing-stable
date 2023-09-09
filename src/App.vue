@@ -12,7 +12,7 @@ export default {
       search: '',
       categoryFilter: '',
       posts: [],
-      createFormSelectOptions: [],
+      createFormSelectOptions: ['fewfwefwef', 'ffewfewfew'],
     }
   },
   methods: {
@@ -38,7 +38,9 @@ export default {
       }
     },
     setCategory(categoryName) {
-      this.createFormSelectOptions.push(categoryName)
+      if (!this.createFormSelectOptions.includes(categoryName)) {
+        this.createFormSelectOptions.push(categoryName)
+      }
     },
     setCategoryFilter(value) {
       if (this.categoryFilter === value) {
@@ -118,9 +120,12 @@ export default {
 .category {
   background: black;
   color: white;
-  padding: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
 }
 .active {
-  background: red;
+  background: #6e8ab6;
 }
 </style>
