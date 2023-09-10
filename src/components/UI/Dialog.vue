@@ -3,7 +3,7 @@
     <div class="dialog-content" @click.stop>
       <div class="header" v-if="title">
         <span>{{title}}</span>
-        <span class="close">X</span>
+        <span class="close" @click="hideDialog">X</span>
       </div>
 
       <div class="content">
@@ -47,6 +47,7 @@ export default {
 
 .close {
   transform: rotateX(45deg);
+  cursor: pointer;
 }
 
 .content {

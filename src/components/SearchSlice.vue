@@ -38,6 +38,8 @@ export default {
 
 <style scoped>
 .highlight {
-  background: red;
+  background: #6e8ab6;
+  border-radius: 2px;
+  padding: 1px 2px;
 }
 </style>

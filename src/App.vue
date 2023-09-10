@@ -74,7 +74,7 @@ export default {
     <div class="btns">
       <Button @click="showDialogCreatePost">Создать пост</Button>
       <Button @click="fetchPosts">Загрузить посты</Button>
-      <Input v-model="search"/>
+      <Input v-model="search" placeholder="Поиск"/>
     </div>
     <div class="categories">
       <span
