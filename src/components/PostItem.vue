@@ -1,7 +1,8 @@
 <template>
   <div class="item">
     <div>
-      <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>
+      <span v-html="replacedTextWithSearchQuery"></span>
+<!--      <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>-->
     </div>
     <div class="btns-item">
       <Button @click="$emit('deletePost', post.id)">Редактировать</Button>
@@ -45,6 +46,14 @@ export default {
         }
 
         return `${this.separatorStart}${text}${this.separatorEnd}`
+      })
+    },
+    replacedTextWithSearchQuery() {
+      return this.title.replaceAll(this.search, (seize) => {
+        if (!seize) {
+          return seize
+        }
+        return `<span class="foundedSubStr">${seize}</span>`
       })
     }
   }
