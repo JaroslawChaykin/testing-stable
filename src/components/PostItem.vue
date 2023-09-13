@@ -1,8 +1,8 @@
 <template>
   <div class="item">
     <div>
-      <span v-html="replacedTextWithSearchQuery"></span>
-<!--      <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>-->
+<!--      <span v-html="replacedTextWithSearchQuery"></span>-->
+      <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>
     </div>
     <div class="btns-item">
       <Button @click="$emit('deletePost', post.id)">Редактировать</Button>

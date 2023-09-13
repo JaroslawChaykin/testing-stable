@@ -10,25 +10,25 @@
     <div class="category">
       <Input type="text" v-model="newCategoryValue" placeholder="Создать категорию"/>
       или
-      <Select :value="valueSelect" :options="selectOptions" @changeCategory="takeCategory"/>
+      <Select :value="valueSelect" :options="categoryStore.categories" @changeCategory="takeCategory"/>
     </div>
   </div>
 </template>
 
 <script>
 import Select from "@/components/UI/Select.vue";
+import {usePostsStore} from "@/store/PostsStore";
+import {useCategoryStore} from "@/store/CategoryStore";
 
 export default {
-  name: "Form",
+  name: "CreatePostForm",
   components: {Select},
-  props: {
-    selectOptions: [String],
-  },
   data() {
     return {
       value: '',
       valueSelect: '',
-      newCategoryValue: ''
+      newCategoryValue: '',
+      categoryStore: useCategoryStore()
     }
   },
   methods: {
@@ -37,15 +37,16 @@ export default {
         const category = this.newCategoryValue ? this.newCategoryValue : this.valueSelect;
 
         if (this.newCategoryValue) {
-          this.$emit('createCategory', this.newCategoryValue)
+          this.categoryStore.createCategory(category)
         }
 
-        this.$emit('createPost', {
+        usePostsStore().createPost({
           id: new Date(),
           title: this.value,
           category,
         })
 
+        this.$emit('hideCreatePostFormDialog', true)
         this.clearForm()
       }
     },

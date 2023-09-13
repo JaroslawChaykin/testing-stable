@@ -1,29 +1,31 @@
 <script>
-import Form from "@/components/Form.vue";
+import Form from "@/components/CreatePostForm.vue";
 import PostList from "@/components/PostList.vue";
 import axios from "axios";
+import {usePostsStore} from "@/store/PostsStore";
+import CreatePostForm from "@/components/CreatePostForm.vue";
+import {useCategoryStore} from "@/store/CategoryStore";
+import {useFilterStore} from "@/store/FilterStore";
 
 export default {
-  components: {PostList, Form},
+  components: {CreatePostForm, PostList, Form},
   data() {
     return {
       visibleDialogCreate: false,
       value: '',
-      search: '',
-      categoryFilter: '',
-      posts: [],
-      createFormSelectOptions: ['fewfwefwef', 'ffewfewfew'],
+      postsStore: usePostsStore(),
+      categoryStore: useCategoryStore(),
+      filterStore: useFilterStore(),
     }
   },
   methods: {
-    createPost(post) {
-      this.posts.push(post)
+    hideCreatePostFormDialog() {
       this.visibleDialogCreate = false;
     },
     deletePost(id) {
       this.posts = this.posts.filter(post => post.id !== id)
     },
-    showDialogCreatePost() {
+    showCreatePostDialog() {
       this.visibleDialogCreate = true;
     },
     async fetchPosts() {
@@ -37,60 +39,42 @@ export default {
 
       }
     },
-    setCategory(categoryName) {
-      if (!this.createFormSelectOptions.includes(categoryName)) {
-        this.createFormSelectOptions.push(categoryName)
-      }
-    },
     setCategoryFilter(value) {
       if (this.categoryFilter === value) {
         this.categoryFilter = ''
       } else {
         this.categoryFilter = value;
       }
-    }
+    },
   },
   mounted() {
     this.fetchPosts()
   },
-  computed: {
-    sortBySearch() {
-      return this.posts.filter(post => post.title.includes(this.search))
-    },
-    sortByCategory() {
-      return this.sortBySearch.filter(post => {
-        if(!this.categoryFilter) {
-          return post
-        }
-        return post.category === this.categoryFilter
-      })
-    },
-  }
 }
 </script>
 
 <template>
   <div class="container">
     <div class="btns">
-      <Button @click="showDialogCreatePost">Создать пост</Button>
+      <Button @click="showCreatePostDialog">Создать пост</Button>
       <Button @click="fetchPosts">Загрузить посты</Button>
-      <Input v-model="search" placeholder="Поиск"/>
+      <Input v-model="filterStore.search" placeholder="Поиск"/>
     </div>
     <div class="categories">
       <span
-          v-for="category in createFormSelectOptions"
+          v-for="category in categoryStore.categories"
           class="category"
           :class="{
-            active: categoryFilter === category
+            active: filterStore.category === category
           }"
-          @click="setCategoryFilter(category)">{{ category }}</span>
+          @click="() => 'Добавить функцию фильтра по категориям'">{{ category }}</span>
     </div>
     <Dialog v-model:show="visibleDialogCreate" title="Создание поста">
-      <Form @createPost="createPost" :selectOptions="createFormSelectOptions" @createCategory="setCategory"/>
+      <CreatePostForm @hideCreatePostFormDialog="hideCreatePostFormDialog"/>
     </Dialog>
     <main>
       <div class="posts">
-        <PostList :posts="sortByCategory" @deletePost="deletePost" :search="search"/>
+        <PostList :posts="postsStore.getFilterByCategoryPosts" @deletePost="deletePost" :search="filterStore.search"/>
       </div>
     </main>
   </div>
