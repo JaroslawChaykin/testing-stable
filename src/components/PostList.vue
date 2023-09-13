@@ -5,7 +5,6 @@
         v-for="post in posts"
         :key="post.id"
         :post="post"
-        @deletePost="$emit('deletePost', post.id)"
         :search="search"
     />
     <h1 v-else>Нет постов</h1>

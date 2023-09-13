@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {useFilterStore} from "@/store/FilterStore";
+import axios from "axios";
 
 export const usePostsStore = defineStore('todosStore', {
     state: () => ({
@@ -8,6 +9,9 @@ export const usePostsStore = defineStore('todosStore', {
     actions: {
         createPost(post) {
             this.posts.push(post)
+        },
+        deletePost(postID) {
+            this.posts = this.posts.filter(post => post.id !== postID)
         }
     },
     getters: {
@@ -25,6 +29,17 @@ export const usePostsStore = defineStore('todosStore', {
                 }
                 return post.category === filterStore.category
             })
-        }
+        },
+        async fetchPosts() {
+            try {
+                const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+
+                if (response.status === 200) {
+                    this.posts.push(...response.data)
+                }
+            } catch (e) {
+
+            }
+        },
     }
 })

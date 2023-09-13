@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     searchSplitter() {
-      const reg = new RegExp(`${this.separatorStart}+[\\w\\s]+${this.separatorEnd}`, 'g')
+      const reg = new RegExp(`${this.separatorStart}+[^.]+${this.separatorEnd}`, 'g')
       const separator = '=+* *+='
 
       const replaced = this.text.replaceAll(reg, (textS) => {

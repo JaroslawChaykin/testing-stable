@@ -1,12 +1,11 @@
 <template>
   <div class="item">
     <div>
-<!--      <span v-html="replacedTextWithSearchQuery"></span>-->
       <SearchSlice :text="searchSliceText" :separatorStart="separatorStart" :separatorEnd="separatorEnd"/>
     </div>
     <div class="btns-item">
-      <Button @click="$emit('deletePost', post.id)">Редактировать</Button>
-      <Button @click="$emit('deletePost', post.id)" danger>Удалить</Button>
+      <Button @click="postsStore.deletePost(post.id)">Редактировать</Button>
+      <Button @click="postsStore.deletePost(post.id)" danger>Удалить</Button>
     </div>
   </div>
 </template>
@@ -14,6 +13,7 @@
 <script>
 
 import SearchSlice from "@/components/SearchSlice.vue";
+import {usePostsStore} from "@/store/PostsStore";
 
 export default {
   name: "PostItem",
@@ -29,7 +29,8 @@ export default {
   data() {
     return {
       title: this.post.title,
-      category: this.post.category
+      category: this.post.category,
+      postsStore: usePostsStore()
     }
   },
   computed: {
@@ -46,14 +47,6 @@ export default {
         }
 
         return `${this.separatorStart}${text}${this.separatorEnd}`
-      })
-    },
-    replacedTextWithSearchQuery() {
-      return this.title.replaceAll(this.search, (seize) => {
-        if (!seize) {
-          return seize
-        }
-        return `<span class="foundedSubStr">${seize}</span>`
       })
     }
   }

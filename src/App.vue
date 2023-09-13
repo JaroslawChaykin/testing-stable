@@ -1,9 +1,9 @@
 <script>
 import Form from "@/components/CreatePostForm.vue";
 import PostList from "@/components/PostList.vue";
-import axios from "axios";
-import {usePostsStore} from "@/store/PostsStore";
 import CreatePostForm from "@/components/CreatePostForm.vue";
+
+import {usePostsStore} from "@/store/PostsStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {useFilterStore} from "@/store/FilterStore";
 
@@ -22,33 +22,12 @@ export default {
     hideCreatePostFormDialog() {
       this.visibleDialogCreate = false;
     },
-    deletePost(id) {
-      this.posts = this.posts.filter(post => post.id !== id)
-    },
-    showCreatePostDialog() {
+    showCreatePostFormDialog() {
       this.visibleDialogCreate = true;
-    },
-    async fetchPosts() {
-      try {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
-
-        if (response.status === 200) {
-          this.posts.push(...response.data)
-        }
-      } catch (e) {
-
-      }
-    },
-    setCategoryFilter(value) {
-      if (this.categoryFilter === value) {
-        this.categoryFilter = ''
-      } else {
-        this.categoryFilter = value;
-      }
     },
   },
   mounted() {
-    this.fetchPosts()
+    this.postsStore.fetchPosts()
   },
 }
 </script>
@@ -56,8 +35,8 @@ export default {
 <template>
   <div class="container">
     <div class="btns">
-      <Button @click="showCreatePostDialog">Создать пост</Button>
-      <Button @click="fetchPosts">Загрузить посты</Button>
+      <Button @click="showCreatePostFormDialog">Создать пост</Button>
+      <Button @click="postsStore.fetchPosts()">Загрузить посты</Button>
       <Input v-model="filterStore.search" placeholder="Поиск"/>
     </div>
     <div class="categories">
@@ -67,14 +46,14 @@ export default {
           :class="{
             active: filterStore.category === category
           }"
-          @click="() => 'Добавить функцию фильтра по категориям'">{{ category }}</span>
+          @click="filterStore.setCategory(category)">{{ category }}</span>
     </div>
     <Dialog v-model:show="visibleDialogCreate" title="Создание поста">
       <CreatePostForm @hideCreatePostFormDialog="hideCreatePostFormDialog"/>
     </Dialog>
     <main>
       <div class="posts">
-        <PostList :posts="postsStore.getFilterByCategoryPosts" @deletePost="deletePost" :search="filterStore.search"/>
+        <PostList :posts="postsStore.getFilterByCategoryPosts" :search="filterStore.search"/>
       </div>
     </main>
   </div>
