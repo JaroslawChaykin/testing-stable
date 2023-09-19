@@ -28,7 +28,7 @@ export default {
   },
   mounted() {
     this.postsStore.fetchPosts()
-  },
+  }
 }
 </script>
 
@@ -46,7 +46,11 @@ export default {
           :class="{
             active: filterStore.category === category
           }"
-          @click="filterStore.setCategory(category)">{{ category }}</span>
+          @click="filterStore.setCategory(category)"
+      >
+        {{ category }}
+        <span class="posts-count" v-if="postsStore.countPostsByCategory(category)">{{postsStore.countPostsByCategory(category) || ''}}</span>
+      </span>
     </div>
     <Dialog v-model:show="visibleDialogCreate" title="Создание поста">
       <CreatePostForm @hideCreatePostFormDialog="hideCreatePostFormDialog"/>
@@ -81,6 +85,9 @@ export default {
 }
 
 .category {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   background: black;
   color: white;
   padding: 4px 8px;
@@ -90,5 +97,11 @@ export default {
 }
 .active {
   background: #6e8ab6;
+}
+.posts-count {
+  background: #6e8ab6;
+  border-radius: 2px;
+  font-size: 10px;
+  padding: 2px;
 }
 </style>
