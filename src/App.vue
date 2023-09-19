@@ -2,6 +2,7 @@
 import Form from "@/components/CreatePostForm.vue";
 import PostList from "@/components/PostList.vue";
 import CreatePostForm from "@/components/CreatePostForm.vue";
+import {storeToRefs} from "pinia";
 
 import {usePostsStore} from "@/store/PostsStore";
 import {useCategoryStore} from "@/store/CategoryStore";
@@ -16,6 +17,7 @@ export default {
       postsStore: usePostsStore(),
       categoryStore: useCategoryStore(),
       filterStore: useFilterStore(),
+      postsByCount: null
     }
   },
   methods: {
@@ -28,7 +30,8 @@ export default {
   },
   mounted() {
     this.postsStore.fetchPosts()
-  }
+    this.postsByCount = storeToRefs(this.postsStore)
+  },
 }
 </script>
 
@@ -49,7 +52,7 @@ export default {
           @click="filterStore.setCategory(category)"
       >
         {{ category }}
-        <span class="posts-count" v-if="postsStore.countPostsByCategory(category)">{{postsStore.countPostsByCategory(category) || ''}}</span>
+        <span class="posts-count" v-if="postsByCount?.getCountPostsByCategory(category)">{{postsByCount.getCountPostsByCategory(category) || ''}}</span>
       </span>
     </div>
     <Dialog v-model:show="visibleDialogCreate" title="Создание поста">

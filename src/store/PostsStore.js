@@ -13,9 +13,6 @@ export const usePostsStore = defineStore('postsStore', {
         deletePost(postID) {
             this.posts = this.posts.filter(post => post.id !== postID)
         },
-        countPostsByCategory(category) {
-            return this.posts.filter(post => post.category === category).length
-        },
         async fetchPosts() {
             try {
                 const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
@@ -43,6 +40,9 @@ export const usePostsStore = defineStore('postsStore', {
                 }
                 return post.category === filterStore.category
             })
+        },
+        getCountPostsByCategory() {
+            return (category) => this.posts.filter(post => post.category === category).length
         },
     }
 })
